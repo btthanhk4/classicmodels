@@ -19,7 +19,7 @@
 ## Cài đặt
 
 ```bash
-git clone [<repo-url>](https://github.com/btthanhk4/classicmodels.git)
+git clone https://github.com/btthanhk4/classicmodels.git
 cd hqtcsdl/backend
 npm install
 ```
@@ -103,7 +103,10 @@ hqtcsdl/
 | GET | `/api/stats/rollup/country-product` | ROLLUP quốc gia × sản phẩm |
 | POST | `/api/chatbot` | Gửi câu hỏi tới chatbot |
 
-## Chatbot — Câu hỏi mẫu
+## Chatbot
+Lấy APi từ Groq
+<img width="1904" height="376" alt="image" src="https://github.com/user-attachments/assets/bafaa86e-f6cb-4894-91ba-46053912e245" />
+
 
 ```
 "Top khách hàng doanh thu cao nhất?"
