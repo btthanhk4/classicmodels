@@ -24,7 +24,7 @@ cd hqtcsdl/backend
 npm install
 ```
 
-Import mysqlsampledatabase.sql
+Import mysqlsampledatabase.sql:
 <img width="623" height="143" alt="image" src="https://github.com/user-attachments/assets/48fe21ff-b76e-401c-a0a5-b977c425865a" />
 
 Tạo file `backend/.env`:
@@ -106,7 +106,7 @@ hqtcsdl/
 | POST | `/api/chatbot` | Gửi câu hỏi tới chatbot |
 
 ## Chatbot
-Lấy APi từ Groq
+Lấy APi từ Groq:
 <img width="1904" height="376" alt="image" src="https://github.com/user-attachments/assets/bafaa86e-f6cb-4894-91ba-46053912e245" />
 
 
