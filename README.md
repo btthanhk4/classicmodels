@@ -25,6 +25,8 @@ npm install
 ```
 
 Tạo file `backend/.env`:
+Import mysqlsampledatabase.sql
+<img width="623" height="143" alt="image" src="https://github.com/user-attachments/assets/48fe21ff-b76e-401c-a0a5-b977c425865a" />
 
 ```env
 DB_HOST=localhost
