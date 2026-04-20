@@ -1,4 +1,5 @@
 # ClassicModels Dashboard
+<img width="1918" height="873" alt="image" src="https://github.com/user-attachments/assets/00629fb3-69a9-4cb6-80e6-7c05f992beac" />
 
 Ứng dụng web quản lý và phân tích dữ liệu bán hàng dựa trên cơ sở dữ liệu mẫu **ClassicModels** (MySQL). Được xây dựng với Node.js/Express ở phía server và Vanilla JavaScript ở phía client.
 
