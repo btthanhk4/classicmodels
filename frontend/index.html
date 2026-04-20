@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClassicModels - Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+  <!-- SIDEBAR -->
+  <aside id="sidebar">
+    <div class="brand">
+      <i class="fas fa-chart-line"></i> ClassicModels
+    </div>
+    <nav>
+      <a href="#" onclick="goToPage('dashboard')" class="active" data-page="dashboard">
+        <i class="fas fa-home"></i> Tổng Quan
+      </a>
+      <a href="#" onclick="goToPage('search')" data-page="search">
+        <i class="fas fa-search"></i> Tìm Kiếm
+      </a>
+      <a href="#" onclick="goToPage('stats')" data-page="stats">
+        <i class="fas fa-chart-bar"></i> Thống Kê
+      </a>
+      <a href="#" onclick="goToPage('pivot')" data-page="pivot">
+        <i class="fas fa-table"></i> Bảng Tổng Hợp
+      </a>
+      <a href="#" onclick="goToPage('chatbot')" data-page="chatbot">
+        <i class="fas fa-comments"></i> Chatbot
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      ClassicModels v1.0
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div id="main">
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div>
+        <h1 id="page-title">Tổng Quan</h1>
+      </div>
+      <div class="badge-db" id="db-status">
+        <i class="fas fa-circle" style="color: #22c55e;"></i> Kết nối CSDL
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- ============ DASHBOARD PAGE ============ -->
+      <div id="page-dashboard" class="page active">
+        <!-- Stat Cards -->
+        <div class="stat-cards">
+          <div class="stat-card">
+            <div class="icon blue"><i class="fas fa-users"></i></div>
+            <div class="info">
+              <div class="value" id="stat-customers">0</div>
+              <div class="label">Khách Hàng</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="icon green"><i class="fas fa-shopping-cart"></i></div>
+            <div class="info">
+              <div class="value" id="stat-orders">0</div>
+              <div class="label">Đơn Hàng</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="icon amber"><i class="fas fa-boxes"></i></div>
+            <div class="info">
+              <div class="value" id="stat-products">0</div>
+              <div class="label">Sản Phẩm</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="icon teal"><i class="fas fa-dollar-sign"></i></div>
+            <div class="info">
+              <div class="value" id="stat-revenue">$0</div>
+              <div class="label">Doanh Thu</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="icon green"><i class="fas fa-check-circle"></i></div>
+            <div class="info">
+              <div class="value" id="stat-shipped">0</div>
+              <div class="label">Đơn Hoàn Thành</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="icon red"><i class="fas fa-times-circle"></i></div>
+            <div class="info">
+              <div class="value" id="stat-cancelled">0</div>
+              <div class="label">Đơn Hủy</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Grid -->
+        <div class="grid-2">
+          <div class="panel">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <div class="panel-title" style="margin: 0;">
+                <i class="fas fa-chart-line"></i> Doanh Thu Theo Tháng
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <label for="dashboard-year-select" style="font-size: 0.9rem; font-weight: 500; color: #334155;">Chọn Năm:</label>
+                <select id="dashboard-year-select" style="padding: 6px 10px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.9rem; min-width: 100px;">
+                  <option value="">-- Chọn năm --</option>
+                </select>
+              </div>
+            </div>
+            <div style="position: relative; height: 350px; width: 100%;">
+              <canvas id="chart-monthly-revenue"></canvas>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-title">
+              <i class="fas fa-chart-pie"></i> Trạng Thái Đơn Hàng
+            </div>
+            <div style="position: relative; height: 350px; width: 100%;">
+              <canvas id="chart-order-status"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top Tables Grid -->
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-title">
+              <i class="fas fa-crown"></i> Top 10 Khách Hàng (Theo Doanh Thu)
+            </div>
+            <div class="table-wrap">
+              <table id="top-customers-table">
+                <thead>
+                  <tr>
+                    <th>Khách Hàng</th>
+                    <th class="num">Doanh Thu</th>
+                    <th class="num">Đơn Hàng</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-title">
+              <i class="fas fa-star"></i> Top 10 Sản Phẩm (Theo Doanh Thu)
+            </div>
+            <div class="table-wrap">
+              <table id="top-products-table">
+                <thead>
+                  <tr>
+                    <th>Tên Sản Phẩm</th>
+                    <th class="num">Doanh Thu</th>
+                    <th class="num">Số Lượng</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ SEARCH PAGE ============ -->
+      <div id="page-search" class="page">
+        <div class="panel">
+          <div class="panel-title">
+            <i class="fas fa-filter"></i> Tìm Kiếm Khách Hàng
+          </div>
+          <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px; margin-bottom: 20px;">
+            <div class="form-group">
+              <input type="text" id="search-customer-query" placeholder="Tìm theo tên, thành phố..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+            </div>
+            <div class="form-group">
+              <select id="search-customer-country" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                <option value="">Tất Cả Quốc Gia</option>
+              </select>
+            </div>
+            <button onclick="searchCustomers()" style="padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer;">
+              <i class="fas fa-search"></i> Tìm
+            </button>
+          </div>
+          <div class="table-wrap">
+            <table id="search-customers-table">
+              <thead>
+                <tr>
+                  <th>Tên Khách Hàng</th>
+                  <th>Quốc Gia</th>
+                  <th>Thành Phố</th>
+                  <th>Liên Hệ</th>
+                  <th>Thao Tác</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">
+            <i class="fas fa-filter"></i> Tìm Kiếm Đơn Hàng
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 12px; margin-bottom: 20px;">
+            <div class="form-group">
+              <input type="text" id="search-order-query" placeholder="Tìm theo tên khách..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+            </div>
+            <div class="form-group">
+              <select id="search-order-status" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                <option value="">Tất Cả Trạng Thái</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <input type="date" id="search-order-from" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+            </div>
+            <div class="form-group">
+              <input type="date" id="search-order-to" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+            </div>
+            <button onclick="searchOrders()" style="padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer;">
+              <i class="fas fa-search"></i> Tìm
+            </button>
+          </div>
+          <div class="table-wrap">
+            <table id="search-orders-table">
+              <thead>
+                <tr>
+                  <th>Mã Đơn</th>
+                  <th>Khách Hàng</th>
+                  <th>Ngày Đặt</th>
+                  <th>Trạng Thái</th>
+                  <th>Thao Tác</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">
+            <i class="fas fa-filter"></i> Tìm Kiếm Sản Phẩm
+          </div>
+          <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px; margin-bottom: 20px;">
+            <div class="form-group">
+              <input type="text" id="search-product-query" placeholder="Tìm theo tên, nhà cung cấp..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+            </div>
+            <div class="form-group">
+              <select id="search-product-line" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                <option value="">Tất Cả Dòng Sản Phẩm</option>
+              </select>
+            </div>
+            <button onclick="searchProducts()" style="padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer;">
+              <i class="fas fa-search"></i> Tìm
+            </button>
+          </div>
+          <div class="table-wrap">
+            <table id="search-products-table">
+              <thead>
+                <tr>
+                  <th>Mã Sản Phẩm</th>
+                  <th>Tên Sản Phẩm</th>
+                  <th>Dòng</th>
+                  <th>Tồn Kho</th>
+                  <th>Giá (MSRP)</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ STATISTICS PAGE ============ -->
+      <div id="page-stats" class="page">
+        <div class="panel">
+          <div class="panel-title">
+            <i class="fas fa-chart-line"></i> Doanh Thu Theo Thời Gian
+          </div>
+          <div style="margin-bottom: 15px;">
+            <label style="margin-right: 15px;">
+              <input type="radio" name="time-groupby" value="year" onchange="loadTimeStats()"> Theo Năm
+            </label>
+            <label style="margin-right: 15px;">
+              <input type="radio" name="time-groupby" value="quarter" onchange="loadTimeStats()"> Theo Quý
+            </label>
+            <label>
+              <input type="radio" name="time-groupby" value="month" checked onchange="loadTimeStats()"> Theo Tháng
+            </label>
+          </div>
+          <canvas id="chart-time-stats"></canvas>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">
+            <i class="fas fa-chart-bar"></i> Thống Kê Sản Phẩm
+          </div>
+          <canvas id="chart-product-stats"></canvas>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">
+            <i class="fas fa-table"></i> Thống Kê Theo Khách Hàng
+          </div>
+          <div style="margin-bottom: 15px;">
+            <input type="text" id="stat-customer-search" placeholder="Tìm kiếm khách hàng..." style="width: 300px; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+            <button onclick="loadCustomerStats()" style="margin-left: 10px; padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer;">Tìm</button>
+          </div>
+          <div class="table-wrap">
+            <table id="customer-stats-table">
+              <thead>
+                <tr>
+                  <th>Tên Khách Hàng</th>
+                  <th>Quốc Gia</th>
+                  <th class="num">Số Đơn</th>
+                  <th class="num">Doanh Thu</th>
+                  <th class="num">Thanh Toán</th>
+                  <th>Lần Đặt Cuối</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ PIVOT TABLE PAGE ============ -->
+      <div id="page-pivot" class="page">
+        <div class="panel">
+          <div class="panel-title">
+            <i class="fas fa-table"></i> Bảng Pivot: Khách Hàng x Thời Gian
+          </div>
+          <div style="margin-bottom: 15px;">
+            <label>Năm: </label>
+            <select id="pivot-year" onchange="loadPivotCustomerTime()" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px;">
+              <option value="2004">2004</option>
+              <option value="2005">2005</option>
+              <option value="2006">2006</option>
+              <option value="2007">2007</option>
+              <option value="2008">2008</option>
+            </select>
+            <span style="margin-left: 20px;">Top N: </span>
+            <input type="number" id="pivot-topn" value="10" style="width: 60px; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+            <button onclick="loadPivotCustomerTime()" style="margin-left: 10px; padding: 8px 16px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer;">Tải</button>
+          </div>
+          <div class="pivot-table">
+            <table id="pivot-customer-time-table">
+              <thead><tr><th>Khách Hàng</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">
+            <i class="fas fa-table"></i> Bảng Pivot: Dòng Sản Phẩm x Thời Gian
+          </div>
+          <div style="margin-bottom: 15px;">
+            <label>Năm: </label>
+            <select id="pivot-year-product" onchange="loadPivotProductTime()" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px;">
+              <option value="">Tất Cả</option>
+              <option value="2004">2004</option>
+              <option value="2005">2005</option>
+              <option value="2006">2006</option>
+              <option value="2007">2007</option>
+              <option value="2008">2008</option>
+            </select>
+            <button onclick="loadPivotProductTime()" style="margin-left: 10px; padding: 8px 16px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer;">Tải</button>
+          </div>
+          <div class="pivot-table">
+            <table id="pivot-product-time-table">
+              <thead><tr><th>Dòng Sản Phẩm</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">
+            <i class="fas fa-table"></i> ROLLUP: Quốc Gia x Dòng Sản Phẩm
+          </div>
+          <div style="margin-bottom: 15px;">
+            <label>Năm: </label>
+            <select id="rollup-year" onchange="loadRollupCountryProduct()" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px;">
+              <option value="">Tất Cả</option>
+              <option value="2004">2004</option>
+              <option value="2005">2005</option>
+              <option value="2006">2006</option>
+              <option value="2007">2007</option>
+              <option value="2008">2008</option>
+            </select>
+            <button onclick="loadRollupCountryProduct()" style="margin-left: 10px; padding: 8px 16px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer;">Tải</button>
+          </div>
+          <div class="table-wrap">
+            <table id="rollup-table">
+              <thead>
+                <tr>
+                  <th>Quốc Gia</th>
+                  <th>Dòng Sản Phẩm</th>
+                  <th class="num">Doanh Thu</th>
+                  <th class="num">Số Lượng</th>
+                  <th class="num">Số Đơn</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ CHATBOT PAGE ============ -->
+      <div id="page-chatbot" class="page">
+        <div class="panel" style="max-width: 1000px; margin: 0 auto;">
+          <!-- Header -->
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+            <div class="panel-title" style="margin:0;">
+              <i class="fas fa-robot"></i> ClassBot
+            </div>
+            <button onclick="clearChat()" style="background:none; border:1px solid #e2e8f0; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:.82rem; color:#64748b;">
+              <i class="fas fa-trash"></i> Xóa lịch sử
+            </button>
+          </div>
+
+          <!-- Câu hỏi gợi ý -->
+          <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px;" id="chat-suggestions">
+            <button onclick="askSuggestion(this)" style="background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe; border-radius:20px; padding:5px 14px; font-size:.82rem; cursor:pointer;">Top khách hàng doanh thu cao nhất?</button>
+            <button onclick="askSuggestion(this)" style="background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe; border-radius:20px; padding:5px 14px; font-size:.82rem; cursor:pointer;">Doanh thu năm 2004 theo từng tháng?</button>
+            <button onclick="askSuggestion(this)" style="background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe; border-radius:20px; padding:5px 14px; font-size:.82rem; cursor:pointer;">Sản phẩm nào bán chạy nhất?</button>
+            <button onclick="askSuggestion(this)" style="background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe; border-radius:20px; padding:5px 14px; font-size:.82rem; cursor:pointer;">Thống kê đơn hàng theo trạng thái?</button>
+            <button onclick="askSuggestion(this)" style="background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe; border-radius:20px; padding:5px 14px; font-size:.82rem; cursor:pointer;">Doanh thu theo từng quốc gia?</button>
+            <button onclick="askSuggestion(this)" style="background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe; border-radius:20px; padding:5px 14px; font-size:.82rem; cursor:pointer;">Sản phẩm nào tồn kho thấp nhất?</button>
+          </div>
+
+          <!-- Tin nhắn -->
+          <div id="chatbot-messages" style="height:500px; overflow-y:auto; border:1px solid #e2e8f0; border-radius:10px; padding:20px; background:#f8fafc; display:flex; flex-direction:column; gap:14px; margin-bottom:14px;">
+            <div id="chat-welcome" style="text-align:center; padding:40px 20px; color:#64748b;">
+              <div style="font-size:2.5rem; margin-bottom:12px;">🤖</div>
+              <div style="font-weight:600; font-size:1.05rem; color:#1e293b; margin-bottom:8px;">Xin chào! Tôi là ClassBot</div>
+              <div style="font-size:.9rem;">Chatbot truy vấn dữ liệu ClassicModels theo thời gian thực.<br>Hỏi về doanh thu, khách hàng, sản phẩm và đơn hàng.</div>
+            </div>
+          </div>
+
+          <!-- Input -->
+          <div style="display:flex; gap:10px;">
+            <input type="text" id="chatbot-input"
+              placeholder="Hỏi bất kỳ điều gì về ClassicModels..."
+              style="flex:1; padding:12px 16px; border:1px solid #e2e8f0; border-radius:8px; font-size:.95rem; outline:none;"
+              onkeypress="handleChatKeypress(event)"
+              onfocus="this.style.borderColor='#2563eb'"
+              onblur="this.style.borderColor='#e2e8f0'">
+            <button id="send-btn" onclick="sendChatMessage()"
+              style="padding:12px 24px; background:#2563eb; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:600; font-size:.95rem; display:flex; align-items:center; gap:8px;">
+              <i class="fas fa-paper-plane"></i> Gửi
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modal for Customer Details -->
+  <div id="customer-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+    <div style="background: white; border-radius: 8px; padding: 30px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2 style="margin: 0;">Chi Tiết Khách Hàng</h2>
+        <button onclick="closeCustomerModal()" style="background: none; border: none; font-size: 24px; cursor: pointer;">&times;</button>
+      </div>
+      <div id="customer-modal-content"></div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
