@@ -25,6 +25,7 @@ npm install
 ```
 
 Import mysqlsampledatabase.sql:
+
 [https://www.mysqltutorial.org/wp-content/uploads/2023/10/mysqlsampledatabase.zip
 ](url)<img width="623" height="143" alt="image" src="https://github.com/user-attachments/assets/48fe21ff-b76e-401c-a0a5-b977c425865a" />
 
