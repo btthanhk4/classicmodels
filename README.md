@@ -19,7 +19,7 @@
 ## Cài đặt
 
 ```bash
-git clone <repo-url>
+git clone [<repo-url>](https://github.com/btthanhk4/classicmodels.git)
 cd hqtcsdl/backend
 npm install
 ```
